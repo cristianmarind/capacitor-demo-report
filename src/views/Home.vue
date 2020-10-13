@@ -1,18 +1,40 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <Card 
+      :title="card.title"
+      :text="card.text"
+      :options="card.options"
+      @option-selected="action"
+    />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import Card from '@/components/Card'
 
 export default {
   name: 'Home',
-  components: {
-    HelloWorld
+  components : {
+    Card
+  },
+  data(){
+    return {
+      card: {
+        title: 'Titulo de la Card',
+        text: 'It is a long established fact that a reader will be distrac making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).',
+        options: [
+          {
+            label: 'Option',
+            actionId: 1
+          }
+        ]
+      }
+    }
+  },
+  methods: {
+    action(actionId){
+      alert(`Action: ${actionId}`)
+    }
   }
 }
 </script>
