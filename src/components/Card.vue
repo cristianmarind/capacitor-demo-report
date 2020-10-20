@@ -20,22 +20,23 @@
             v-text="item.label"
            />
           </b-dropdown-item>
-        
       </b-dropdown>
     </div>
     <b-card-title v-text="title" />
-    <b-card-text v-text="text" />
+    <b-card-body>
+      <img class="w-100 h-auto" :src="image" >
+    </b-card-body>
   </b-card>
 </template>
+
 
 <script>
 export default {
   name: "Card",
-  props: ["title", "text", "options"],
+  props: ["id", "title", "image", "options", 'cardIndex'],
   methods: {
     emitAction(actionId){
-      console.log(actionId);
-      this.$emit('option-selected', actionId)
+      this.$emit('option-selected', actionId, this.id)
     }
   }
 };

@@ -1,16 +1,35 @@
 <template>
-  <div>
-    <Card 
-      :title="card.title"
-      :text="card.text"
-      :options="card.options"
-      @option-selected="action"
-    />
+  <div class="pt-5 px-3">
+    <button 
+      @click="newReport"
+      class="btn btn-success mb-3"
+    >
+      Nuevo Reporte
+    </button>
+    <div style="font-size: 2em" class="font-weight-bold mb-2">
+      <span>Reportes</span>
+    </div>
+    <div v-for="(card, index) in cards" :key="index">
+      <Card 
+        :id="index"
+        :title="card.title"
+        :image="card.image"
+        :options="options"
+        @option-selected="action"
+      />
+    </div>
+    
   </div>
 </template>
 
 <script>
 import Card from '@/components/Card'
+import {
+  Storage,
+  Plugins
+} from "@capacitor/core";
+
+const { Share } = Plugins
 
 export default {
   name: 'Home',
@@ -19,21 +38,44 @@ export default {
   },
   data(){
     return {
-      card: {
-        title: 'Titulo de la Card',
-        text: 'It is a long established fact that a reader will be distrac making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).',
-        options: [
-          {
-            label: 'Option',
-            actionId: 1
-          }
-        ]
-      }
+      cards: [],
+      options: [
+        {
+          label: 'Compartir',
+          actionId: 1
+        },
+        {
+          label: 'Option 2',
+          actionId: 2
+        }
+      ]
     }
   },
+  async created(){
+    const ret = await Storage.get({ key: 'reports' });
+    this.cards = JSON.parse(ret.value)
+  },
   methods: {
-    action(actionId){
-      alert(`Action: ${actionId}`)
+    newReport(){
+      this.$router.push({
+        path: '/createReport'
+      })
+    },
+    async action(actionId, cardIndex){
+      switch (actionId) {
+        case 1:
+          await Share.share({
+            title: this.cards[cardIndex].title,
+            url: this.cards[cardIndex].image,
+          });
+          break;
+      
+        default:
+          break;
+      }
+    },
+    share(){
+
     }
   }
 }
